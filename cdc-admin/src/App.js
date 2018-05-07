@@ -11,49 +11,50 @@ class App extends Component {
         super();
         this.state = {
             lista: [],
-            name: '',
+            nome: '',
             email: '',
-            password: ''
+            senha: ''
         }
     }
 
-    componentWillMount(){
-        Axios.get('https://api.myjson.com/bins/13b4g2')
-        .then((response) => {
+    componentDidMount(){
+        Axios.get('https://cdc-react.herokuapp.com/api/autores')
+        .then(response => {
             this.setState({ 
                 lista: response.data
             })
         })
     }
 
-    enviaForm = (evento) => {
+    enviaForm = evento => {
         evento.preventDefault();
-        Axios.post('https://api.myjson.com/bins', {
-            'name': this.state.name,
-            'email': this.state.email,
-            'password': this.state.password
+        Axios.post('https://cdc-react.herokuapp.com/api/autores', {
+            nome: this.state.nome,
+            email: this.state.email,
+            senha: this.state.senha,
         })
-        .then((response) => {
-            console.log(response.data.uri)
+        .then(response => {
+            console.log('dados enviados')
             this.setState({
-                lista: response.config.data.split(",")
+                lista: response.data
             })
+            console.log(response)
         })
-        .catch((response)=> {
+        .catch(response => {
             console.log(response)
         })
     }
 
-    setName = (evento) => {
-        this.setState({name: evento.target.value});
+    setNome = evento => {
+        this.setState({nome: evento.target.value});
     }
 
-    setEmail = (evento) => {
+    setEmail = evento => {
         this.setState({email: evento.target.value});
     }
 
-    setPassword = (evento) => {
-        this.setState({password: evento.target.value});
+    setSenha = evento => {
+        this.setState({senha: evento.target.value});
     }
 
     render() {
@@ -79,9 +80,9 @@ class App extends Component {
                     <div className="content" id="content">
                         <div className="pure-form pure-form-aligned">
                             <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm.bind()} method='post'>
-                                <InputCustomizavel id="name" type="text" name="name" value={this.state.name} onChange={this.setName} label="Nome"/>
-                                <InputCustomizavel id="email" type="text" name="email" value={this.state.email} onChange={this.setEmail} label="E-mail"/>
-                                <InputCustomizavel id="password" type="password" name="password" value={this.state.password} onChange={this.setPassword} label="Senha"/>
+                                <InputCustomizavel id="nome" type="text" nome="nome" value={this.state.nome} onChange={this.setNome} label="Nome"/>
+                                <InputCustomizavel id="email" type="text" nome="email" value={this.state.email} onChange={this.setEmail} label="E-mail"/>
+                                <InputCustomizavel id="senha" type="password" nome="senha" value={this.state.senha} onChange={this.setSenha} label="Senha"/>
                                 <BotaoSubmitCustomizado label="Gravar"/>
                             </form>             
                         </div>  
@@ -89,14 +90,14 @@ class App extends Component {
                             <table className="pure-table">
                             <thead>
                                 <tr>
-                                <th>Nome</th>
-                                <th>email</th>
+                                    <th>Nome</th>
+                                    <th>email</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.lista.map((autor, index) =>  
-                                    <tr key={index}>
-                                        <td>{autor.name}</td>                
+                                {this.state.lista.map((autor) =>  
+                                    <tr key={autor.id}>
+                                        <td>{autor.nome}</td>                
                                         <td>{autor.email}</td>
                                     </tr>
                                 )}
